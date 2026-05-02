@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>A Situational Analytic Method for User Behavior Pattern</title>
+
+    <meta charset="utf-8" />
+
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/coin-slider.css' %}" />
+
+    <script src="{% static 'js/cufon-yui.js' %}"></script>
+    <script src="{% static 'js/cufon-georgia.js' %}"></script>
+    <script src="{% static 'js/jquery-1.4.2.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/coin-slider.min.js' %}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <!-- ✅ SweetAlert messages -->
+    {% if messages %}
+    {% for message in messages %}
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '{{ message }}',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    </script>
+    {% endfor %}
+    {% endif %}
+
+    <div class="main">
+
+        <!-- ================= HEADER ================= -->
+        <div class="header">
+            <div class="header_resize">
+
+                <div class="logo">
+                    <br><br>
+                    <p>
+                        <font size="5" color="black">
+                            A Situational Analytic Method for User Behavior Pattern in Multimedia Social Networks
+                        </font>
+                    </p>
+                </div>
+
+                <div class="menu_nav">
+                    <ul>
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#">Admin</a></li>
+                        <li><a href="#">User</a></li>
+                        <li><a href="#">Registration</a></li>
+                    </ul>
+                </div>
+
+                <div class="slider">
+                    <div id="coin-slider">
+                        <a href="#"><img src="{% static 'images/slide1.jpg' %}" width="960" height="360"></a>
+                        <a href="#"><img src="{% static 'images/slide2.jpg' %}" width="960" height="360"></a>
+                        <a href="#"><img src="{% static 'images/slide3.jpeg' %}" width="960" height="360"></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ================= CONTENT ================= -->
+        <div class="content">
+            <div class="content_resize">
+
+                <!-- ===== MAIN ===== -->
+                <div class="mainbar">
+                    <div class="article">
+
+                        <br /><br /><br /><br />
+
+                        <center>
+
+                            <!-- ✅ Django form -->
+                            <form method="post">
+                                {% csrf_token %}
+
+                                <table border="0">
+                                    <center>
+                                        <h2>
+                                            <font color="black">Search Friends</font>
+                                        </h2>
+                                    </center><br />
+
+                                    <tr>
+                                        <td>Name :</td>
+                                        <td><input type="text" name="username" required></td>
+                                    </tr>
+
+                                    <tr align="center">
+                                        <td colspan="2">
+                                            <br>
+                                            <input type="submit" value="Search">
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </form>
+
+                        </center>
+
+                    </div>
+                </div>
+
+
+                <!-- ===== SIDEBAR ===== -->
+                <div class="sidebar">
+                    <div class="gadget">
+
+                        <!-- profile pic -->
+                        <div class="img">
+                            {% if user_obj and user_obj.profile_pic %}
+                            <img src="{{ user_obj.profile_pic.url }}" width="120" height="120">
+                            {% else %}
+                            <img src="{% static 'images/img1.jpg' %}" width="120">
+                            {% endif %}
+                        </div>
+
+                        <h2 class="star"><span>Sidebar</span> Menu</h2>
+
+                        <ul class="sb_menu">
+                            <li><a href="{% url 'user_home' %}">Home</a></li>
+                            <li><a href="{% url 'search_friends' %}">Search Friends</a></li>
+                            <li><a href="{% url 'view_friend_requests' %}">View Friend Request</a></li>
+                            <li><a href="{% url 'upload_post' %}">Post Images</a></li>
+                            <li><a href="{% url 'send_message' %}">Send Messages</a></li>
+                            <li><a href="{% url 'view_messages' %}">View Messages</a></li>
+                            <li><a href="{% url 'user_view_posts' %}">View Posts</a></li>
+                            <li><a href="{% url 'create_group' %}">Create Group</a></li>
+                            <li><a href="{% url 'add_friends' %}">Add Friends to Group</a></li>
+                            <li><a href="{% url 'view_group_request' %}">View Group Request</a></li>
+                            <li><a href="{% url 'view_group_members' %}">View Group Members</a></li>
+                            <li><a href="{% url 'upload_video' %}">Upload Videos</a></li>
+                            <li><a href="{% url 'view_videos' %}">Uploaded Videos</a></li>
+                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

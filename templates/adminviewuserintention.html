@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>A Situational Analytic Method for User Behavior Pattern</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/coin-slider.css' %}" />
+
+    <script src="{% static 'js/cufon-yui.js' %}"></script>
+    <script src="{% static 'js/cufon-georgia.js' %}"></script>
+    <script src="{% static 'js/jquery-1.4.2.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/coin-slider.min.js' %}"></script>
+
+</head>
+
+<body>
+
+    <div class="main">
+
+        <!-- ================= HEADER ================= -->
+        <div class="header">
+            <div class="header_resize">
+
+                <div class="logo">
+                    <br><br>
+                    <p>
+                        <font size="5" color="black">
+                            A Situational Analytic Method for User Behavior Pattern in Multimedia Social Networks
+                        </font>
+                    </p>
+                </div>
+
+                <div class="menu_nav">
+                    <ul>
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#">Admin</a></li>
+                        <li><a href="#">User</a></li>
+                        <li><a href="#">Registration</a></li>
+                    </ul>
+                </div>
+
+                <div class="slider">
+                    <div id="coin-slider">
+                        <img src="{% static 'images/slide1.jpg' %}" width="960" height="360" />
+                        <img src="{% static 'images/slide2.jpg' %}" width="960" height="360" />
+                        <img src="{% static 'images/slide3.jpeg' %}" width="960" height="360" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ================= CONTENT ================= -->
+        <div class="content">
+            <div class="content_resize">
+
+                <div class="mainbar">
+                    <div class="article">
+
+                        <br><br>
+
+                        <center>
+                            <h2>
+                                <font color="black" size="5">User Intention</font>
+                            </h2>
+
+                            <br>
+
+                            <table border="2" width="100%">
+
+                                <tr style="background-color: orange">
+                                    <td>
+                                        <font color="black">User Name</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">Intention</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">Prediction</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">Confidence %</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">Sequence</font>
+                                    </td>
+
+                                    <td>
+                                        <font color="black">Time</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">Behavior</font>
+                                    </td>
+
+                                </tr>
+
+                                {% for row in data %}
+
+                                <tr>
+                                    <td>
+                                        <font color="black">{{ row.user.username }}</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">{{ row.intention }}</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">{{ row.prediction }}</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">{{ row.confidence }}%</font>
+                                    </td>
+
+                                    <td>
+                                        <font color="black">{{ row.sequence }}</font>
+                                    </td>
+                                    <td>
+                                        <font color="black">{{ row.time }}</font>
+                                    </td>
+                                    <td>
+                                        <font
+                                            color="{% if row.behavior_status == 'Negative' %}red{% else %}green{% endif %}">
+                                            {{ row.behavior_status }}
+                                        </font>
+                                    </td>
+
+                                </tr>
+
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" align="center">No Data Found</td>
+                                </tr>
+                                {% endfor %}
+
+                            </table>
+
+                        </center>
+
+                    </div>
+                </div>
+
+
+                <!-- ================= SIDEBAR ================= -->
+                <div class="sidebar">
+                    <div class="gadget">
+
+                        <h2 class="star"><span>Admin</span> Menu</h2>
+
+                        <ul class="sb_menu">
+                            <li><a href="{% url 'admin_home' %}">Home</a></li>
+                            <li><a href="{% url 'view_users' %}">View Users</a></li>
+                            <li><a href="{% url 'admin_view_posts' %}">View User Posts</a></li>
+                            <li><a href="{% url 'admin_view_videos' %}">View Uploaded Videos</a></li>
+                            <li><a href="{% url 'admin_view_user_intention' %}">User Intention Analysis</a></li>
+                            <li><a href="{% url 'admin_logout' %}">Logout</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
