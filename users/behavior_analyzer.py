@@ -52,10 +52,17 @@ BAD_WORDS = [
 ]
 
 
+import re
+
 from .models import UserBehavior
+
+
 def analyze_behavior(user_id):
 
-    logs = UserBehavior.objects.filter(user_id=user_id)
+    # only the most recent 50 logs, so old behavior does not label a user forever
+    logs = UserBehavior.objects.filter(
+        user_id=user_id
+    ).order_by("-timestamp")[:50]
 
     score = 0
 
@@ -63,7 +70,8 @@ def analyze_behavior(user_id):
         text = (log.description or "").lower()
 
         for bad in BAD_WORDS:
-            if bad in text:
+            # whole-word match, so "die" does not match "studied"
+            if re.search(r"\b" + re.escape(bad) + r"\b", text):
                 score += 1
 
     if score >= 3:

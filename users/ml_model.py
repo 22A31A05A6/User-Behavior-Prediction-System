@@ -2,7 +2,7 @@ import pandas as pd
 import joblib
 
 from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 
 from .models import UserBehavior
 
@@ -36,14 +36,11 @@ def create_dataset(user_id):
 
 
 # =============================
-# STEP B → Train model
+# STEP B → Train model (XGBoost)
 # =============================
 
 import os
-import joblib
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from users.models import UserBehavior
 
 
 def train_model(user_id):
@@ -74,12 +71,25 @@ def train_model(user_id):
     X = np.array(X)
     y = np.array(y)
 
-    model = RandomForestClassifier(n_estimators=100)
+    # XGBoost needs labels 0..k-1 with no gaps
+    le = LabelEncoder()
+    y = le.fit_transform(y)
+
+    # only one possible next action -> nothing to learn
+    if len(le.classes_) < 2:
+        return None
+
+    model = XGBClassifier(
+        n_estimators=100,
+        max_depth=3,
+        learning_rate=0.1,
+        random_state=42
+    )
     model.fit(X, y)
 
-    joblib.dump((model, mapping), f"model_user_{user_id}.pkl")
+    joblib.dump((model, mapping, le), f"model_user_{user_id}.pkl")
 
-    return model, mapping
+    return model, mapping, le
 
 
 
@@ -90,7 +100,7 @@ def predict_next(user_id, last_action):
     if result is None:
         return "Unknown", 0
 
-    model, mapping = result
+    model, mapping, le = result
 
     logs = UserBehavior.objects.filter(
         user_id=user_id
@@ -105,8 +115,9 @@ def predict_next(user_id, last_action):
 
     features = [[mapping[a] for a in last_three]]
 
-    pred = model.predict(features)[0]
-    prob = model.predict_proba(features)[0].max()
+    # model gives encoded label -> convert back to mapping index
+    pred = le.inverse_transform(model.predict(features))[0]
+    prob = float(model.predict_proba(features)[0].max())   # float32 -> plain float for the DB
 
     reverse = {v: k for k, v in mapping.items()}
 
